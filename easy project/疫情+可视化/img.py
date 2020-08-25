@@ -9,6 +9,11 @@ def get_data():
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
     }
+    data = []
+    url = 'https://api.inews.qq.com/newsqa/v1/query/inner/publish/modules/list?modules=chinaDayList,chinaDayAddList,cityStatis,nowConfirmStatis,provinceCompare'
+    a = requests.get(url=url, headers=headers).text
+    i = json.loads(a)["data"]["chinaDayList"]
+    data.append(i)
     country = ['意大利',
                '巴西',
                '西班牙',
@@ -17,7 +22,6 @@ def get_data():
                '法国',
                '美国',
                '俄罗斯']
-    data = []
     for c in country:
         url = f'https://api.inews.qq.com/newsqa/v1/automation/foreign/daily/list?country={c}&'
         a = requests.get(url=url, headers=headers).text
@@ -26,7 +30,8 @@ def get_data():
 
 
 def img_confirm(data):
-    country = ['意大利',
+    country = ['中国',
+               '意大利',
                '巴西',
                '西班牙',
                '德国',
@@ -41,17 +46,21 @@ def img_confirm(data):
         x = [i['date'] for i in data[index]]
         y = [i['confirm'] for i in data[index]]
         if len(x) > 206:
-            x = x[len(x)-206:]
-            y = y[len(y)-206:]
+            if c == '中国':
+                x = x[len(x)-207:]
+                y = y[len(y)-207:]
+            else:
+                x = x[len(x)-206:]
+                y = y[len(y)-206:]
         plt.plot(x, y, label=c)
         index += 1
     plt.legend()
-    x = [i['date'] for i in data[0]]
+    x = [i['date'] for i in data[1]]
     my_x_ticks = [x[i] for i in range(0, len(x), 14)]+[x[-1]]
     my_y_ticks = [i for i in range(0, 6000001, 1000000)]
     plt.xticks(my_x_ticks)
     plt.yticks(my_y_ticks)
-
+    plt.xticks(rotation=45)
     plt.xlabel("日期")
     plt.ylabel(f"人数(百万)")
     plt.title(f"感染趋势")
@@ -60,7 +69,8 @@ def img_confirm(data):
 
 
 def img_heal(data):
-    country = ['意大利',
+    country = ['中国',
+               '意大利',
                '巴西',
                '西班牙',
                '德国',
@@ -75,12 +85,16 @@ def img_heal(data):
         x = [i['date'] for i in data[index]]
         y = [i["heal"] for i in data[index]]
         if len(x) > 206:
-            x = x[len(x)-206:]
-            y = y[len(y)-206:]
+            if c == '中国':
+                x = x[len(x)-207:]
+                y = y[len(y)-207:]
+            else:
+                x = x[len(x)-206:]
+                y = y[len(y)-206:]
         plt.plot(x, y, label=c)
         index += 1
     plt.legend()
-    x = [i['date'] for i in data[0]]
+    x = [i['date'] for i in data[1]]
     my_x_ticks = [x[i] for i in range(0, len(x), 14)]+[x[-1]]
     my_y_ticks = [i for i in range(0, 4000001, 1000000)]
     plt.xticks(my_x_ticks)
@@ -94,7 +108,8 @@ def img_heal(data):
 
 
 def img_dead(data):
-    country = ['意大利',
+    country = ['中国',
+               '意大利',
                '巴西',
                '西班牙',
                '德国',
@@ -109,12 +124,16 @@ def img_dead(data):
         x = [i['date'] for i in data[index]]
         y = [i["dead"] for i in data[index]]
         if len(x) > 206:
-            x = x[len(x)-206:]
-            y = y[len(y)-206:]
+            if c == '中国':
+                x = x[len(x)-207:]
+                y = y[len(y)-207:]
+            else:
+                x = x[len(x)-206:]
+                y = y[len(y)-206:]
         plt.plot(x, y, label=c)
         index += 1
     plt.legend()
-    x = [i['date'] for i in data[0]]
+    x = [i['date'] for i in data[1]]
     my_x_ticks = [x[i] for i in range(0, len(x), 14)]+[x[-1]]
     my_y_ticks = [i for i in range(0, 200001, 20000)]
     plt.xticks(my_x_ticks)
@@ -128,7 +147,8 @@ def img_dead(data):
 
 
 def img_heal_ratio(data):
-    country = ['意大利',
+    country = ['中国',
+               '意大利',
                '巴西',
                '西班牙',
                '德国',
@@ -143,12 +163,16 @@ def img_heal_ratio(data):
         x = [i['date'] for i in data[index]]
         y = [i['heal']/i['confirm'] for i in data[index]]
         if len(x) > 206:
-            x = x[len(x)-206:]
-            y = y[len(y)-206:]
+            if c == '中国':
+                x = x[len(x)-207:]
+                y = y[len(y)-207:]
+            else:
+                x = x[len(x)-206:]
+                y = y[len(y)-206:]
         plt.plot(x, y, label=c)
         index += 1
     plt.legend()
-    x = [i['date'] for i in data[0]]
+    x = [i['date'] for i in data[1]]
     my_x_ticks = [x[i] for i in range(0, len(x), 14)]+[x[-1]]
     plt.xticks(my_x_ticks)
 
@@ -164,7 +188,8 @@ def img_heal_ratio(data):
 
 
 def img_dead_ratio(data):
-    country = ['意大利',
+    country = ['中国',
+               '意大利',
                '巴西',
                '西班牙',
                '德国',
@@ -179,12 +204,16 @@ def img_dead_ratio(data):
         x = [i['date'] for i in data[index]]
         y = [i['dead']/i['confirm'] for i in data[index]]
         if len(x) > 206:
-            x = x[len(x)-206:]
-            y = y[len(y)-206:]
+            if c == '中国':
+                x = x[len(x)-207:]
+                y = y[len(y)-207:]
+            else:
+                x = x[len(x)-206:]
+                y = y[len(y)-206:]
         plt.plot(x, y, label=c)
         index += 1
     plt.legend()
-    x = [i['date'] for i in data[0]]
+    x = [i['date'] for i in data[1]]
     my_x_ticks = [x[i] for i in range(0, len(x), 14)]+[x[-1]]
     plt.xticks(my_x_ticks)
 
@@ -197,6 +226,7 @@ def img_dead_ratio(data):
     plt.title(f"死亡率趋势")
     plt.savefig(f'死亡率趋势.jpg')
     plt.show()
+
 
 if __name__ == "__main__":
     data = get_data()
